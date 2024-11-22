@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rainbow Box</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        #rainbowBox {
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            transition: background-color 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="rainbowBox"></div>
+    <audio id="bounceSound" src="YOUR_SOUND_FILE.mp3" preload="auto"></audio>
+
+    <script>
+        const box = document.getElementById('rainbowBox');
+        const sound = document.getElementById('bounceSound');
+        const colors = ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'];
+        let position = { x: 0, y: 0 };
+        let direction = { x: 1, y: 1 };
+        const boxSize = 100; // Size of the box
+        const speed = 5; // Speed of movement
+
+        function changeColor() {
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            box.style.backgroundColor = colors[randomIndex];
+        }
+
+        function moveBox() {
+            position.x += direction.x * speed;
+            position.y += direction.y * speed;
+
+            // Check for collision with the window edges
+            if (position.x + boxSize > window.innerWidth || position.x < 0) {
+                direction.x *= -1; // Reverse direction
+                sound.play(); // Play sound
+            }
+            if (position.y + boxSize > window.innerHeight || position.y < 0) {
+                direction.y *= -1; // Reverse direction
+                sound.play(); // Play sound
+            }
+
+            box.style.left = position.x + 'px';
+            box.style.top = position.y + 'px';
+        }
+
+        function animate() {
+            changeColor();
+            moveBox();
+            requestAnimationFrame(animate);
+        }
+
+        // Start the animation
+        animate();
+    </script>
+</body>
+</html>
