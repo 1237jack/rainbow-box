@@ -12,6 +12,7 @@
             height: 100vh;
             margin: 0;
             background-color: #f4f4f4;
+            overflow: hidden; /* Prevent scrollbars */
         }
         #rainbowBox {
             width: 100px;
@@ -23,7 +24,7 @@
 </head>
 <body>
     <div id="rainbowBox"></div>
-    <audio id="bounceSound" src="YOUR_SOUND_FILE.mp3" preload="auto"></audio>
+    <audio id="bounceSound" src="boing.mp3" preload="auto"></audio>
 
     <script>
         const box = document.getElementById('rainbowBox');
@@ -33,10 +34,11 @@
         let direction = { x: 1, y: 1 };
         const boxSize = 100; // Size of the box
         const speed = 5; // Speed of movement
+        let currentColorIndex = 0;
 
         function changeColor() {
-            const randomIndex = Math.floor(Math.random() * colors.length);
-            box.style.backgroundColor = colors[randomIndex];
+            box.style.backgroundColor = colors[currentColorIndex];
+            currentColorIndex = (currentColorIndex + 1) % colors.length; // Cycle through colors
         }
 
         function moveBox() {
@@ -58,10 +60,12 @@
         }
 
         function animate() {
-            changeColor();
             moveBox();
             requestAnimationFrame(animate);
         }
+
+        // Change color every 500 milliseconds
+        setInterval(changeColor, 500);
 
         // Start the animation
         animate();
