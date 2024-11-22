@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rainbow Box</title>
+    <title>Rainbow Box with Beads</title>
     <style>
         body {
             display: flex;
@@ -13,12 +13,25 @@
             margin: 0;
             background-color: #f4f4f4;
             overflow: hidden; /* Prevent scrollbars */
+            position: relative; /* For absolute positioning of beads */
         }
         #rainbowBox {
             width: 100px;
             height: 100px;
             position: absolute;
             transition: background-color 0.5s;
+        }
+        .bead {
+            width: 10px;
+            height: 10px;
+            background-color: blue;
+            border-radius: 50%;
+            position: absolute;
+        }
+        .line {
+            position: absolute;
+            background-color: white;
+            height: 2px; /* Line thickness */
         }
     </style>
 </head>
@@ -35,6 +48,21 @@
         const boxSize = 100; // Size of the box
         const speed = 5; // Speed of movement
         let currentColorIndex = 0;
+
+        // Bead setup
+        const beads = [];
+        const beadCount = 50; // Number of beads
+        const beadSize = 10; // Size of the beads
+
+        // Create beads
+        for (let i = 0; i < beadCount; i++) {
+            const bead = document.createElement('div');
+            bead.className = 'bead';
+            bead.style.left = Math.random() * (window.innerWidth - beadSize) + 'px';
+            bead.style.top = Math.random() * (window.innerHeight - beadSize) + 'px';
+            document.body.appendChild(bead);
+            beads.push(bead);
+        }
 
         function changeColor() {
             box.style.backgroundColor = colors[currentColorIndex];
@@ -67,8 +95,21 @@
         // Change color every 500 milliseconds
         setInterval(changeColor, 500);
 
-        // Start the animation
-        animate();
-    </script>
-</body>
-</html>
+        // Move beads randomly
+        function moveBeads() {
+            beads.forEach(bead => {
+                const x = parseFloat(bead.style.left) + (Math.random() * 2 - 1); // Random x movement
+                const y = parseFloat(bead.style.top) + (Math.random() * 2 - 1); // Random y movement
+                bead.style.left = Math.min(Math.max(x, 0), window.innerWidth - beadSize) + 'px';
+                bead.style.top = Math.min(Math.max(y, 0), window.innerHeight - beadSize) + 'px';
+            });
+        }
+
+        setInterval(moveBeads, 100); // Move beads every 100 milliseconds
+
+        // Draw lines from mouse cursor to closest beads
+        document.addEventListener('mousemove', (event) => {
+            const lines = document.querySelectorAll('.line');
+            lines.forEach(line => line.remove()); // Remove previous lines
+
+           
